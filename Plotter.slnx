@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Elementos de la solución/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="Plotter.Core/Plotter.Core.csproj" />
+  <Project Path="Plotter.TestApp/Plotter.TestApp.csproj" />
+  <Project Path="Plotter.Usb/Plotter.Usb.csproj" />
+</Solution>
