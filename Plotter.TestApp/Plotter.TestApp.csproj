@@ -1,0 +1,22 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plotter.Core\Plotter.Core.csproj" />
+    <ProjectReference Include="..\Plotter.Usb\Plotter.Usb.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="CH375DLL.DLL"
+		CopyToOutputDirectory="PreserveNewest"/>
+	</ItemGroup>
+	
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
