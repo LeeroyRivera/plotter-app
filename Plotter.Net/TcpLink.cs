@@ -24,11 +24,12 @@ public sealed class TcpLink : IPlotterLink
 
         var client = new TcpClient
         {
-            NoDelay = true,                                          
+            NoDelay = true, // Desactiva Nagle para que los paquetes se envíen inmediatamente, reduciendo la latencia.                                          
             ReceiveTimeout = IoTimeoutMs,
             SendTimeout = IoTimeoutMs
         };
 
+        // Intentar conectarse al plotter con un tiempo de espera
         try
         {
             using var cts = new CancellationTokenSource(ConnectTimeoutMs);   
