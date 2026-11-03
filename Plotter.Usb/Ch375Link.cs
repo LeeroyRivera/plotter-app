@@ -1,5 +1,4 @@
 ﻿using Plotter.Core;
-using System.Formats.Asn1;
 
 namespace Plotter.Usb
 {
@@ -10,11 +9,11 @@ namespace Plotter.Usb
         /*
          Este id es el identificador usb esperado para el dispositivo CH375. Se utiliza para verificar que el dispositivo conectado es efectivamente un CH375 y no otro dispositivo USB.
         VID (Vendor ID) es un identificador único asignado a cada fabricante de dispositivos USB por la USB Implementers Forum (USB-IF). En este caso, el VID 4348 corresponde a WCH, el fabricante del CH375.
-        PID (Product ID) es un identificador único asignado a cada producto de un fabricante. En este caso, el PID 5537 corresponde al CH375.
+        PID (Product ID) es un identificador único asignado a cada producto de un fabricante. En este caso, el PID 5537 corresponde al plotter Richpeace.
          */
         private const uint ExpectedUsbId = 0x55374348; //VID 4348 PID 5537
         private const int MaxChunk = 4096; // Tamaño máximo de datos que se pueden enviar o recibir en una sola operación de lectura o escritura.
-        private const int UsbPacket = 64; // Tamaño de paquete USB estándar para dispositivos de baja velocidad.
+        private const int UsbPacket = 64; // Tamaño de paquete USB full-speed.
         private const uint TimeoutMs = 3000; // Tiempo de espera en milisegundos para las operaciones USB.
 
         private readonly uint _index;
@@ -105,7 +104,7 @@ namespace Plotter.Usb
             {
                 uint len = UsbPacket; // len es la cantidad de bytes que se intentarán leer en esta operación de lectura. Se pasa por referencia a la función CH375ReadData para que pueda actualizarse con la cantidad real de bytes leídos.
                 if (!Ch375Native.CH375ReadData(_index, tmp, ref len) || len == 0)
-                    throw new IOException($"Plotter {_index}: fallo al leer datos del dispositivo CH375. Bytes leídos: {len}, posición: {filled} de {count} bytes");
+                    throw new TimeoutException($"Plotter {_index}: fallo al leer datos del dispositivo CH375. Bytes leídos: {len}, posición: {filled} de {count} bytes");
 
                 for (int i = 0; i < len; i++)
                 {
