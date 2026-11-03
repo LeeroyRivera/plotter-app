@@ -4,11 +4,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Plotter.Core\Plotter.Core.csproj" />
     <ProjectReference Include="..\Plotter.Usb\Plotter.Usb.csproj" />
+    <ProjectReference Include="..\Plotter.Net\Plotter.Net.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
-		<None Include="CH375DLL.DLL"
-		CopyToOutputDirectory="PreserveNewest"/>
+		<None Include="CH375DLL.DLL" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	
   <PropertyGroup>

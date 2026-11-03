@@ -30,8 +30,12 @@ public partial class Form1 : Form
     {
         try
         {
-            using var link1 = new Ch375Link(Plotter1Index);
-            using var link2 = new Ch375Link(Plotter2Index);
+            string logPath1 = Path.Combine(AppContext.BaseDirectory, "logs",
+                $"Plotter{Plotter1Index}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
+            string logPath2 = Path.Combine(AppContext.BaseDirectory, "logs",
+                $"Plotter{Plotter2Index}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
+            using var link1 = new LoggingLink(new Ch375Link(Plotter1Index), logPath1);
+            using var link2 = new LoggingLink(new Ch375Link(Plotter2Index), logPath2);
 
             link1.Open();
             link2.Open();
@@ -40,6 +44,8 @@ public partial class Form1 : Form
             var protocol2 = new PlotterProtocol(link2).ReadSettings();
 
             txtConfiguracion1.Text = protocol1.ToString().Replace(", ", Environment.NewLine);
+
+
             txtConfiguracion2.Text = protocol2.ToString().Replace(", ", Environment.NewLine);
 
         }
