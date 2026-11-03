@@ -7,12 +7,22 @@ public sealed class PlotterProtocol
 {
     private readonly IPlotterLink _link;
 
-    public PlotterProtocol(IPlotterLink link) => _link = link;             
+    public PlotterProtocol(IPlotterLink link) => _link = link;
 
+    //Segun el firmware, el plotter responde con 95 bytes (USB) o 94 bytes (red). El primer byte indica el formato: 0x5E = USB, si no = red.
     public PlotterSettings ReadSettings()
     {
-        _link.Write(Encoding.ASCII.GetBytes("Msg_Read"));                     // El comando Msg_Read solicita al plotter que envíe su configuración actual.
-        byte[] reply = _link.Read(SettingsParser.UsbReplyLength);             // El plotter responde con 95 bytes, que incluyen la cabecera "Msg_" y los 72 bytes de datos de configuración del plotter. 
-        return SettingsParser.ParseUsb(reply);
+        _link.Write(Encoding.ASCII.GetBytes("Msg_Read"));
+
+        byte[] first = _link.Read(1);
+        int rest = first[0] switch
+        {
+            0x5E => SettingsParser.UsbReplyLength - 1,      // USB: 94 más
+            (byte)'M' => SettingsParser.NetworkReplyLength - 1,  // red: 93 más
+            _ => throw new FormatException($"Msg_Read: primer byte inesperado 0x{first[0]:X2}.")
+        };
+
+        byte[] reply = [.. first, .. _link.Read(rest)];
+        return SettingsParser.Parse(reply);
     }
 }
