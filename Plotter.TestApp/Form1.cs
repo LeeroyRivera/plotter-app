@@ -5,18 +5,20 @@ namespace Plotter.TestApp;
 
 public partial class Form1 : Form
 {
+    private uint Plotter1Index; // Indice del plotter seleccionado en el combo box cbxPlotter1. cambia
+    private uint Plotter2Index;
     public Form1()
     {
         InitializeComponent();
     }
 
-    private void btnConectar_Click(object sender, EventArgs e)
+    private void btnConectar1_Click(object sender, EventArgs e)
     {
         try
         {
-            using var link = new Ch375Link(0);
+            using var link = new Ch375Link(Plotter1Index);
             link.Open();
-            MessageBox.Show("Conectado al plotter 0");
+            MessageBox.Show("Conectado al plotter 1");
         }
         catch (Exception ex)
         {
@@ -28,11 +30,18 @@ public partial class Form1 : Form
     {
         try
         {
-            using var link = new Ch375Link(0);
-            link.Open();
-            var protocol = new PlotterProtocol(link);
-            PlotterSettings s = protocol.ReadSettings();
-            txtConfiguracion.Text = s.ToString().Replace(", ", Environment.NewLine);
+            using var link1 = new Ch375Link(Plotter1Index);
+            using var link2 = new Ch375Link(Plotter2Index);
+
+            link1.Open();
+            link2.Open();
+
+            var protocol1 = new PlotterProtocol(link1).ReadSettings();
+            var protocol2 = new PlotterProtocol(link2).ReadSettings();
+
+            txtConfiguracion1.Text = protocol1.ToString().Replace(", ", Environment.NewLine);
+            txtConfiguracion2.Text = protocol2.ToString().Replace(", ", Environment.NewLine);
+
         }
         catch (Exception ex)
         {
@@ -40,8 +49,28 @@ public partial class Form1 : Form
         }
     }
 
-    private void label1_Click(object sender, EventArgs e)
-    {
 
+    private void cbxPlotter1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Plotter1Index = (uint)cbxPlotter1.SelectedIndex;
+    }
+
+    private void btnConectarP2_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            using var link = new Ch375Link(Plotter2Index);
+            link.Open();
+            MessageBox.Show("Conectado al plotter 2");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error");
+        }
+    }
+
+    private void cbxPlotter2_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Plotter2Index = (uint)cbxPlotter2.SelectedIndex;
     }
 }
